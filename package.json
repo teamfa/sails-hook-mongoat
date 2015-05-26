@@ -1,0 +1,35 @@
+{
+  "name": "sails-hooks-mongoat",
+  "version": "1.0.1",
+  "description": "Provides advanced mongo indexing options for sails models that use the sails-mongo adapter.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Salakar/sails-hooks-mongoat.git"
+  },
+  "keywords": [
+    "sails",
+    "mongo",
+    "index",
+    "expires",
+    "expiresAfterSeconds",
+    "unique",
+    "sparse",
+    "background",
+    "weights",
+    "text",
+    "2d",
+    "2dsphere",
+    "geoHaystack",
+    "waterline"
+  ],
+  "author": "Michael Diarmid",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^1.0.0",
+    "lodash": "^3.9.3"
+  }
+}
