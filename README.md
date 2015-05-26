@@ -1,4 +1,4 @@
-sails-hooks-mongoat
+sails-hook-mongoat
 -------------------
 
 
@@ -6,9 +6,9 @@ Provides advanced mongo indexing options for sails.js models that use the sails-
 
 ## Usage ##
 
-    npm i sails-hooks-mongoat
+    npm i sails-hook-mongoat
 
-Then simply add an 'indexes' array property to your sails model(s) that you want to add customer indexers on.  This contains all your indexes. 
+Then simply add an 'indexes' array property to your sails model(s) that you want to add custom indexers on.  This contains all your indexes.
 
 Index properties:
 
@@ -19,7 +19,7 @@ Index properties:
 
 **Creating a 'expires after' index**
 ```javascript
-// MY MODEL WITH DATE A FIELD
+// MY MODEL WITH A DATE FIELD
 module.exports = {
   attributes: {
     myDate: {
