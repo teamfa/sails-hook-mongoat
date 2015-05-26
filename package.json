@@ -1,6 +1,6 @@
 {
   "name": "sails-hook-mongoat",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Provides advanced mongo indexing options for sails models that use the sails-mongo adapter.",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Salakar/sails-hooks-mongoat.git"
+    "url": "https://github.com/Salakar/sails-hook-mongoat.git"
   },
   "keywords": [
     "sails",
