@@ -34,7 +34,7 @@ module.exports = function (sails) {
     var async = require('async');
 
 
-  var getIndexes = function (key, next) {
+  var getIndexes = function (key, done) {
     var model = sails.models[key];
     // check for indexes
     if (_.isArray(model.indexes) && model.indexes.length > 0) {
@@ -42,11 +42,11 @@ module.exports = function (sails) {
         model.indexes[i].model = key; // add model name to index
         done();
       }, function () {
-        _.merge(indexes, model.indexes);
-        next();
+        indexes = _.union(indexes,model.indexes);
+        done();
       });
     } else {
-      next();
+      done();
     }
   };
 
@@ -86,7 +86,7 @@ module.exports = function (sails) {
         sails.log.verbose('sails mongoat started');
         async.each(Object.keys(sails.models), getIndexes, function () {
           async.each(indexes, function (index, done) {
-            self.createIndex(index.model, index.attributes, index.options, done);
+            self.createIndex(index.model, index.attributes, index.options || {}, done);
           }, function () {
             cb();
           });
@@ -96,5 +96,4 @@ module.exports = function (sails) {
 
     }
   };
-
 };
