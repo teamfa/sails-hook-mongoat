@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Salakar/sails-hook-mongoat.git"
+    "url": "https://github.com/teamfa/sails-hook-mongoat.git"
   },
   "keywords": [
     "sails",
@@ -29,8 +29,8 @@
     "geoHaystack",
     "waterline"
   ],
-  "author": "Michael Diarmid",
-  "license": "ISC",
+  "author": "Team FA",
+  "license": "MIT",
   "dependencies": {
     "async": "^1.0.0",
     "lodash": "^3.9.3"
