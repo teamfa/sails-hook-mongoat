@@ -1,10 +1,11 @@
-sails-hook-mongoat
--------------------
-
+# sails-hook-mongoat
+[![NPM version][npm-image]][npm-url]
+[![Build status][travis-image]][travis-url]
+[![Dependency Status][daviddm-image]][daviddm-url]
 
 Provides advanced mongo indexing options for sails.js models that use the sails-mongo adapter.
 
-## Usage ##
+## Usage
 
     npm i sails-hook-mongoat
 
@@ -70,12 +71,14 @@ module.exports = {
 };
 ```
 
+## Maintained By
+- [Mike Diarmid](https://github.com/salakar)
 
-## Contributing ##
+<img src='http://i.imgur.com/NsAdNdJ.png'>
 
-Fork the repo, make your changes and submit a pull request.
-
-
-## Todo ##
-
- - Options & Attribute validations (?)
+[npm-image]: https://img.shields.io/npm/v/sails-hook-webpack.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/sails-hook-webpack
+[travis-image]: https://img.shields.io/travis/teamfa/sails-hook-webpack.svg?style=flat-square
+[travis-url]: https://travis-ci.org/teamfa/sails-hook-webpack
+[daviddm-image]: http://img.shields.io/david/teamfa/sails-hook-webpack.svg?style=flat-square
+[daviddm-url]: https://david-dm.org/teamfa/sails-hook-webpack
