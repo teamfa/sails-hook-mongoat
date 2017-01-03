@@ -84,6 +84,12 @@ module.exports = function (sails) {
 
       sails.after(eventsToWaitFor, function () {
         sails.log.verbose('sails mongoat started');
+
+        if(sails.config.models.migrate !== 'alter' && sails.config.models.migrate !== 'drop') {
+          sails.log.verbose('sails mongoat skipping index creation (according to "' + sails.config.models.migrate + '" migration strategy)');
+          return cb();
+        }
+
         async.each(Object.keys(sails.models), getIndexes, function () {
           async.each(indexes, function (index, done) {
             self.createIndex(index.model, index.attributes, index.options || {}, done);
