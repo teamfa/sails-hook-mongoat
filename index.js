@@ -54,7 +54,7 @@ module.exports = function (sails) {
     createIndex: function (modelName, fields, options, next) {
       var model = sails.models[modelName];
       // check model adapter is sails-mongo by checking first connections adapter -- is this the best way?
-      if (model && model.adapter.connections[Object.keys(model.adapter.connections)[0]].config.adapter == 'sails-mongo')
+      if (model && model._adapter.datastores[Object.keys(model._adapter.datastores)[0]].config.adapter == 'sails-mongo')
         model.native(function (err, collection) {
           collection.ensureIndex(fields, options, function (err) {
             if (err) {
