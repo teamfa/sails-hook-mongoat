@@ -54,25 +54,27 @@ module.exports = function (sails) {
     createIndex: function (modelName, fields, options, next) {
       var model = sails.models[modelName];
       // check model adapter is sails-mongo by checking first connections adapter -- is this the best way?
-      if (model && model._adapter.datastores[Object.keys(model._adapter.datastores)[0]].config.adapter == 'sails-mongo')
-        model.native(function (err, collection) {
-          collection.ensureIndex(fields, options, function (err) {
-            if (err) {
-              sails.log.error('Mongoat: Error creating index for model', modelName);
-              sails.log.error(fields);
-              sails.log.error(err);
-            }
-            else
-              sails.log.verbose('Mongoat: An index was created for model', modelName);
+      if (model && model._adapter.datastores[Object.keys(model._adapter.datastores)[0]].config.adapter == 'sails-mongo') {
+        var db = model.getDatastore().manager;
 
-            if (_.isFunction(next))
-              next(err);
+        // Now we can do anything we could do with a Mongo `db` instance:
+        var collection = db.collection(model.tableName);
+        collection.ensureIndex(fields, options, function (err) {
+          if (err) {
+            sails.log.error('Mongoat: Error creating index for model', modelName);
+            sails.log.error(fields);
+            sails.log.error(err);
+          } else {
+            sails.log.verbose('Mongoat: An index was created for model', modelName);
+          }
 
-          });
+          if (_.isFunction(next)) {
+            next(err);
+          }
         });
-      else {
-        if (_.isFunction(next))
-          next('Model not provided or model adapter is not sails-mongo.')
+      }
+      else if (_.isFunction(next)) {
+        next('Model not provided or model adapter is not sails-mongo.');
       }
     },
     initialize: function (cb) {
@@ -98,8 +100,6 @@ module.exports = function (sails) {
           });
         });
       });
-
-
     }
   };
 };
