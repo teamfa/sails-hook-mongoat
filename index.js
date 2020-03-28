@@ -54,27 +54,41 @@ module.exports = function (sails) {
     createIndex: function (modelName, fields, options, next) {
       var model = sails.models[modelName];
       // check model adapter is sails-mongo by checking first connections adapter -- is this the best way?
-      if (model && model._adapter.datastores[Object.keys(model._adapter.datastores)[0]].config.adapter == 'sails-mongo') {
-        var db = model.getDatastore().manager;
-
-        // Now we can do anything we could do with a Mongo `db` instance:
-        var collection = db.collection(model.tableName);
-        collection.ensureIndex(fields, options, function (err) {
-          if (err) {
-            sails.log.error('Mongoat: Error creating index for model', modelName);
-            sails.log.error(fields);
-            sails.log.error(err);
-          } else {
-            sails.log.verbose('Mongoat: An index was created for model', modelName);
-          }
-
-          if (_.isFunction(next)) {
-            next(err);
-          }
-        });
+      let adapter = null;
+      if (model) {
+        if (model.adapter && model.adapter.connections) {
+          adapter = model.adapter.connections[Object.keys(model.adapter.connections)[0]].config.adapter;
+        } else if (model._adapter && model._adapter.datastores) {
+          adapter = model._adapter.datastores[Object.keys(model._adapter.datastores)[0]].config.adapter;
+        }
       }
-      else if (_.isFunction(next)) {
-        next('Model not provided or model adapter is not sails-mongo.');
+      if (adapter == 'sails-mongo' || adapter == 'sails-mongo-append') {
+        const ensureIndex = (collection) => {
+          collection.ensureIndex(fields, options, function (err) {
+            if (err) {
+              sails.log.error('Mongoat: Error creating index for model', modelName);
+              sails.log.error(fields);
+              sails.log.error(err);
+            } else {
+              sails.log.verbose('Mongoat: An index was created for model', modelName);
+            }
+            if (_.isFunction(next)) {
+              next(err);
+            }
+          });
+        };
+        if (model.getDatastore) {
+          const db = model.getDatastore().manager;
+          const collection = db.collection(model.tableName);
+          ensureIndex(collection);
+        } else {
+          model.native(function (err, collection) {
+            ensureIndex(collection);
+          });
+        }
+      } else {
+        if (_.isFunction(next))
+          next('Model not provided or model adapter is not sails-mongo.')
       }
     },
     initialize: function (cb) {
@@ -100,6 +114,8 @@ module.exports = function (sails) {
           });
         });
       });
+
+
     }
   };
 };
