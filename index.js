@@ -54,23 +54,39 @@ module.exports = function (sails) {
     createIndex: function (modelName, fields, options, next) {
       var model = sails.models[modelName];
       // check model adapter is sails-mongo by checking first connections adapter -- is this the best way?
-      if (model && model._adapter.datastores[Object.keys(model._adapter.datastores)[0]].config.adapter == 'sails-mongo')
-        model.native(function (err, collection) {
+      let adapter = null;
+      if (model) {
+        if (model.adapter && model.adapter.connections) {
+          adapter = model.adapter.connections[Object.keys(model.adapter.connections)[0]].config.adapter;
+        } else if (model._adapter && model._adapter.datastores) {
+          adapter = model._adapter.datastores[Object.keys(model._adapter.datastores)[0]].config.adapter;
+        }
+      }
+      if (adapter == 'sails-mongo' || adapter == 'sails-mongo-append') {
+        const ensureIndex = (collection) => {
           collection.ensureIndex(fields, options, function (err) {
             if (err) {
               sails.log.error('Mongoat: Error creating index for model', modelName);
               sails.log.error(fields);
               sails.log.error(err);
-            }
-            else
+            } else {
               sails.log.verbose('Mongoat: An index was created for model', modelName);
-
-            if (_.isFunction(next))
+            }
+            if (_.isFunction(next)) {
               next(err);
-
+            }
           });
-        });
-      else {
+        };
+        if (model.getDatastore) {
+          const db = model.getDatastore().manager;
+          const collection = db.collection(model.tableName);
+          ensureIndex(collection);
+        } else {
+          model.native(function (err, collection) {
+            ensureIndex(collection);
+          });
+        }
+      } else {
         if (_.isFunction(next))
           next('Model not provided or model adapter is not sails-mongo.')
       }
@@ -85,10 +101,10 @@ module.exports = function (sails) {
       sails.after(eventsToWaitFor, function () {
         sails.log.verbose('sails mongoat started');
 
-        if(sails.config.models.migrate !== 'alter' && sails.config.models.migrate !== 'drop') {
+        /*if(sails.config.models.migrate !== 'alter' && sails.config.models.migrate !== 'drop') {
           sails.log.verbose('sails mongoat skipping index creation (according to "' + sails.config.models.migrate + '" migration strategy)');
           return cb();
-        }
+        }*/
 
         async.each(Object.keys(sails.models), getIndexes, function () {
           async.each(indexes, function (index, done) {
