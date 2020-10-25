@@ -54,8 +54,8 @@ module.exports = function (sails) {
     createIndex: function (modelName, fields, options, next) {
       var model = sails.models[modelName];
       // check model adapter is sails-mongo by checking first connections adapter -- is this the best way?
-      if (model && model._adapter.datastores[Object.keys(model._adapter.datastores)[0]].config.adapter == 'sails-mongo')
-        model.native(function (err, collection) {
+      const collection = model.getDatastore().manager.collection(model.tableName)
+      if (collection)
           collection.ensureIndex(fields, options, function (err) {
             if (err) {
               sails.log.error('Mongoat: Error creating index for model', modelName);
@@ -69,7 +69,6 @@ module.exports = function (sails) {
               next(err);
 
           });
-        });
       else {
         if (_.isFunction(next))
           next('Model not provided or model adapter is not sails-mongo.')
