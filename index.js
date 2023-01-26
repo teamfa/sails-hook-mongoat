@@ -64,7 +64,7 @@ module.exports = function (sails) {
       }
       if (adapter == 'sails-mongo' || adapter == 'sails-mongo-append') {
         const ensureIndex = (collection) => {
-          let createIndexMethod = collection.createIndex || collection.ensureIndex;
+          const createIndexMethod = (collection.createIndex || collection.ensureIndex).bind(collection);
           createIndexMethod(fields, options, function (err) {
             if (err) {
               sails.log.error('Mongoat: Error creating index for model', modelName);
